@@ -23,8 +23,9 @@ module "app_eks_cluster" {
   providers = {
     kubernetes = kubernetes.app_cluster
   }
-  source                                             = "terraform-aws-modules/eks/aws"
-  version                                            = "17.1.0"
+  #source                                             = "terraform-aws-modules/eks/aws"
+  source                                              = "./modules/eks_cluster"
+  #version                                            = "17.1.0"
   create_eks                                         = true
   cluster_name                                       = local.app_cluster_name
   enable_irsa                                        = true
@@ -54,7 +55,7 @@ module "app_eks_cluster" {
   worker_security_group_id                           = module.app_eks_worker_node_group_sg.security_group_id
   worker_create_cluster_primary_security_group_rules = true
   map_roles                                          = concat(local.app_cluster_map_roles, local.app_cluster_map_roles_list)
-  map_users                                          = local.app_cluster_map_users_list
+  map_users                                          = concat(local.app_cluster_map_users, local.app_cluster_map_users_list)
   cluster_encryption_config = [
     {
       provider_key_arn = aws_kms_key.eks_kms_key["app-eks"].arn
@@ -147,8 +148,7 @@ module "app_eks_cluster" {
     aws_iam_role_policy_attachment.eks_nodegroup_AmazonEC2ContainerRegistryReadOnly,
     aws_iam_role_policy_attachment.eks_nodegroup_AmazonEKSCNIPolicy,
     aws_iam_role_policy_attachment.eks_nodegroup_AmazonEKSWorkerNodePolicy,
-    aws_iam_instance_profile.eks_instance_profile,
-    aws_iam_role.eks_admin_role]
+    aws_iam_instance_profile.eks_instance_profile]
 }
 #blockchain cluster specific
 #ssh key pair for blockchain cluster worker nodes (eks)
@@ -169,8 +169,9 @@ module "blk_eks_cluster" {
   providers = {
     kubernetes = kubernetes.blk_cluster
   }
-  source                                             = "terraform-aws-modules/eks/aws"
-  version                                            = "17.1.0"
+  #source                                             = "terraform-aws-modules/eks/aws"
+  source                                              = "./modules/eks_cluster"
+  #version                                            = "17.1.0"
   create_eks                                         = true
   cluster_name                                       = local.blk_cluster_name
   enable_irsa                                        = true
@@ -200,7 +201,7 @@ module "blk_eks_cluster" {
   worker_security_group_id                           = module.blk_eks_worker_node_group_sg.security_group_id
   worker_create_cluster_primary_security_group_rules = true
   map_roles                                          = concat(local.blk_cluster_map_roles, local.blk_cluster_map_roles_list)
-  map_users                                          = local.blk_cluster_map_users_list
+  map_users                                          = concat(local.blk_cluster_map_users, local.blk_cluster_map_users_list)
   cluster_encryption_config = [
     {
       provider_key_arn = aws_kms_key.eks_kms_key["blk-eks"].arn
@@ -293,6 +294,5 @@ module "blk_eks_cluster" {
     aws_iam_role_policy_attachment.eks_nodegroup_AmazonEC2ContainerRegistryReadOnly,
     aws_iam_role_policy_attachment.eks_nodegroup_AmazonEKSCNIPolicy,
     aws_iam_role_policy_attachment.eks_nodegroup_AmazonEKSWorkerNodePolicy,
-    aws_iam_instance_profile.eks_instance_profile,
-    aws_iam_role.eks_admin_role]
+    aws_iam_instance_profile.eks_instance_profile]
 }

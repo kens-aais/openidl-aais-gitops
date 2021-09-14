@@ -44,6 +44,7 @@ data "aws_caller_identity" "current" {
 #reading application cluster info
 data "aws_eks_cluster" "app_eks_cluster" {
   name = module.app_eks_cluster.cluster_id
+  depends_on = [module.app_eks_cluster.cluster_id]
 }
 data "aws_eks_cluster_auth" "app_eks_cluster_auth" {
   depends_on = [data.aws_eks_cluster.app_eks_cluster]
@@ -52,6 +53,7 @@ data "aws_eks_cluster_auth" "app_eks_cluster_auth" {
 #reading blockchain cluster info
 data "aws_eks_cluster" "blk_eks_cluster" {
   name = module.blk_eks_cluster.cluster_id
+  depends_on = [module.blk_eks_cluster.cluster_id]
 }
 data "aws_eks_cluster_auth" "blk_eks_cluster_auth" {
   depends_on = [data.aws_eks_cluster.blk_eks_cluster]
@@ -130,7 +132,7 @@ data "aws_iam_policy_document" "cloudtrail_kms_policy_doc" {
     principals {
       type = "AWS"
 
-      identifiers = ["arn:aws:iam::${var.aws_account_number}:root"]
+      identifiers = ["arn:aws:iam::${var.aws_account_number}:root", "${var.aws_role_arn}"]
     }
 
     resources = ["*"]
@@ -179,7 +181,7 @@ data "aws_iam_policy_document" "cloudtrail_kms_policy_doc" {
 
     principals {
       type        = "AWS"
-      identifiers = ["*"]
+      identifiers = ["arn:aws:iam::${var.aws_account_number}:root", "${var.aws_role_arn}"]
     }
 
     resources = ["*"]
@@ -204,7 +206,7 @@ data "aws_iam_policy_document" "cloudtrail_kms_policy_doc" {
 
     principals {
       type        = "AWS"
-      identifiers = ["*"]
+      identifiers = ["arn:aws:iam::${var.aws_account_number}:root", "${var.aws_role_arn}"]
     }
 
     condition {
@@ -233,7 +235,7 @@ data "aws_iam_policy_document" "cloudtrail_kms_policy_doc" {
 
     principals {
       type        = "AWS"
-      identifiers = ["*"]
+      identifiers = ["arn:aws:iam::${var.aws_account_number}:root", "${var.aws_role_arn}"]
     }
 
     condition {
