@@ -60,7 +60,19 @@ resource "aws_s3_bucket_policy" "bucket_policy" {
                     "s3:x-amz-acl": "bucket-owner-full-control"
                 }
             }
+        },
+      {
+        Sid       = "HTTPRestrict"
+        Effect    = "Deny"
+        Principal = "*"
+        Action    = "s3:*"
+        Resource = "arn:aws:s3:::${local.std_name}-${var.s3_bucket_name_cloudtrail}/*",
+        Condition = {
+          Bool = {
+            "aws:SecureTransport" = "false"
+          }
         }
+      }
     ]
 })
 }
@@ -150,6 +162,6 @@ resource "aws_kms_key" "s3_kms_key" {
 }
 #setting up an alias for the kms key used with s3 bucket data encryption
 resource "aws_kms_alias" "s3_kms_key" {
-  name          = "alias/s3_key_${local.std_name}-${var.s3_bucket_name_cloudtrail}-1"
+  name          = "alias/s3_key_${local.std_name}-${var.s3_bucket_name_cloudtrail}"
   target_key_id = aws_kms_key.s3_kms_key.id
 }

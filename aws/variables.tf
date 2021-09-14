@@ -20,10 +20,11 @@ variable "aws_account_number" {
   type        = string
   description = "The aws account number on which core application infra is to setup/exists"
 }
-variable "node_type" {
-  type        = string
-  description = "The name of the node type will be setup"
-}
+
+#variable "node_type" {
+#  type        = string
+#  description = "The name of the node type will be setup"
+#}
 variable "aws_user_arn" {
   type        = string
   description = "The iam user will have access to s3 bucket and kms key"
@@ -585,6 +586,7 @@ variable "eks_wg_ebs_vol_encrypted" {
 variable "eks_wg_health_check_type" {
   description = "Type of Health check for worker group"
 }
+/*
 variable "app_cluster_service_ipv4_cidr" {
   description = "The app eks cluster service ipv4 cidr"
   type        = string
@@ -592,7 +594,7 @@ variable "app_cluster_service_ipv4_cidr" {
 variable "blk_cluster_service_ipv4_cidr" {
   description = "The app eks cluster service ipv4 cidr"
   type        = string
-}
+}*/
 variable "app_eks_worker_nodes_ssh_key" {
   type        = string
   description = "The ssh public key to setup on worker nodes in app cluster eks for remote access"
@@ -631,4 +633,8 @@ variable "s3_bucket_name_cloudtrail" {
   type        = string
   description = "The name of s3 bucket to store the cloudtrail logs"
 }
-
+variable "org_name" {
+  type = string
+  description = "The short name of the carrier node"
+  default = ""
+}
